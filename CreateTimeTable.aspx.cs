@@ -15,7 +15,7 @@ namespace UokSemesterSystem
     {
         private static string conString = Utilities1.GetConnectionString();
         private static SqlConnection con = new SqlConnection(conString);
-        string Id, AccountID, listId,courseId,classId, TeacId,AssisId;
+        string Id, AccountID, listId, courseId, classId, TeacId, AssisId;
         string[] TimeTableData;
         private List<string[]> Courses = new List<string[]>();
 
@@ -41,10 +41,10 @@ namespace UokSemesterSystem
                 CourseErr.Visible = true;
 
             }
-            else if (AssisTeacherList.Visible.Equals(true)&& AssisTeacherList.SelectedValue.Equals("NA"))
+            else if (AssisTeacherList.Visible.Equals(true) && AssisTeacherList.SelectedValue.Equals("NA"))
             {
-                    AssErr.Visible = true;
-                
+                AssErr.Visible = true;
+
 
             }
             else if (STime.Text == "")
@@ -65,7 +65,7 @@ namespace UokSemesterSystem
                 StimeErr.Visible = false;
                 EtimeErr.Visible = false;
                 RoomErr.Visible = false;
-                TimeTableData = new string[13];
+                TimeTableData = new string[12];
                 TimeTableData[0] = Session["courseId"].ToString();
                 TimeTableData[1] = Session["classId"].ToString();
                 TimeTableData[2] = Session["TeacId"].ToString();
@@ -86,15 +86,14 @@ namespace UokSemesterSystem
                 TimeTableData[9] = Section.Text;
                 TimeTableData[10] = DaysList.SelectedValue;
                 TimeTableData[11] = Session["AccountId"].ToString();
-                TimeTableData[12] = Session["Slot"].ToString();
 
                 UpdateTimeTable(TimeTableData);
                 Page.Response.Redirect(Page.Request.Url.ToString(), true);
                 SaveErr.Text = "Update Successfully";
                 PnlMain.Visible = false;
-                ShowTTForm.Visible = true;
+              //  ShowTTForm.Visible = true;
             }
-           
+
         }
 
         private void UpdateTimeTable(string[] TimeTable)
@@ -102,10 +101,10 @@ namespace UokSemesterSystem
             using (SqlConnection con = new SqlConnection(conString))
             {
                 con.Open();
-               string query = "Update TimeTable set CourseId=@CourseId,ClassId=@ClassId,TId=@TId,AId=@AId,STime=@STime,ETime=@ETime,ClassRoomNo=@ClassRoomNo,SemesterNo=@SemesterNo,Year=@Year,Section=@Section,Day=@Day,DId=@DId,Slot=@Slot where Id='" + Session["TTId"].ToString() + "' ";
+                string query = "Update TimeTable set CourseId=@CourseId,ClassId=@ClassId,TId=@TId,AId=@AId,STime=@STime,ETime=@ETime,ClassRoomNo=@ClassRoomNo,SemesterNo=@SemesterNo,Year=@Year,Section=@Section,Day=@Day,DId=@DId where Id='" + Session["TTId"].ToString() + "' ";
 
                 SqlCommand cmd = new SqlCommand(query, con);
-               
+
                 cmd.Parameters.AddWithValue("@CourseId", TimeTable[0]);
                 cmd.Parameters.AddWithValue("@ClassId", TimeTable[1]);
                 cmd.Parameters.AddWithValue("@TId", TimeTable[2]);
@@ -118,7 +117,6 @@ namespace UokSemesterSystem
                 cmd.Parameters.AddWithValue("@Section", TimeTable[9]);
                 cmd.Parameters.AddWithValue("@Day", TimeTable[10]);
                 cmd.Parameters.AddWithValue("@DId", TimeTable[11]);
-                cmd.Parameters.AddWithValue("@Slot", TimeTable[12]);
                 SqlDataReader dr = cmd.ExecuteReader();
                 dr.Read();
                 con.Close();
@@ -130,30 +128,32 @@ namespace UokSemesterSystem
             if (ClassList.SelectedValue.Equals("NA"))
             {
                 ClassErr.Visible = true;
-            }else if(TeacherList.SelectedValue.Equals("NA"))
+            }
+            else if (TeacherList.SelectedValue.Equals("NA"))
             {
                 TeacherErr.Visible = true;
-            }else if(CourseList.SelectedValue.Equals("NA"))
+            }
+            else if (CourseList.SelectedValue.Equals("NA"))
             {
                 CourseErr.Visible = true;
-                
-            }
-            else if (AssisTeacherList.Visible.Equals(true)&& AssisTeacherList.SelectedValue.Equals("NA"))
-            {
-                 AssErr.Visible = true;
-               
 
             }
-            else if(STime.Text=="")
+            else if (AssisTeacherList.Visible.Equals(true) && AssisTeacherList.SelectedValue.Equals("NA"))
+            {
+                AssErr.Visible = true;
+
+
+            }
+            else if (STime.Text == "")
             {
                 StimeErr.Visible = true;
 
             }
-            else if(ETime.Text.Equals(""))
+            else if (ETime.Text.Equals(""))
             {
                 EtimeErr.Visible = true;
             }
-            else if(RoomNo.Text.Equals(""))
+            else if (RoomNo.Text.Equals(""))
             {
                 RoomErr.Visible = true;
             }
@@ -162,7 +162,7 @@ namespace UokSemesterSystem
                 StimeErr.Visible = false;
                 EtimeErr.Visible = false;
                 RoomErr.Visible = false;
-                TimeTableData = new string[13];
+                TimeTableData = new string[12];
                 TimeTableData[0] = Session["courseId"].ToString();
                 TimeTableData[1] = Session["classId"].ToString();
                 TimeTableData[2] = Session["TeacId"].ToString();
@@ -183,12 +183,11 @@ namespace UokSemesterSystem
                 TimeTableData[9] = Section.Text;
                 TimeTableData[10] = DaysList.SelectedValue;
                 TimeTableData[11] = Session["AccountId"].ToString();
-                TimeTableData[12] = Session["Slot"].ToString();
 
                 if (CheckForAvailability(TimeTableData))
                 {
                     SaveErr.Text = "This Schedule is already register";
-                    
+
                 }
                 else
                 {
@@ -197,7 +196,7 @@ namespace UokSemesterSystem
                     Page.Response.Redirect(Page.Request.Url.ToString(), true);
                     SaveErr.Text = "TimeTable added successfully";
                     PnlMain.Visible = false;
-                    ShowTTForm.Visible = true;
+                   // ShowTTForm.Visible = true;
 
                 }
             }
@@ -205,7 +204,7 @@ namespace UokSemesterSystem
 
 
 
-            }
+        }
 
         private void AddTimeTable(string[] TimeTable)
         {
@@ -213,7 +212,7 @@ namespace UokSemesterSystem
             {
                 con.Open();
                 //string query = "Select * from TimeTable where CourseId='" + TimeTable[2] + "' and AId='" + TimeTable[3] + "' and Year='" + TimeTable[8] + "' and STime='" + TimeTable[4] + "' and Day='" + TimeTable[10] + "'";
-                string query = "insert into [dbo].[TimeTable]([CourseId],[ClassId],[TId],[AId],[STime],[ETime],[ClassRoomNo],[SemesterNo],[Year],[Section],[Day],[DId],[Slot]) values (@CourseId,@ClassId,@TId,@AId,@STime,@ETime,@ClassRoomNo,@SemesterNo,@Year,@Section,@Day,@DId,@Slot)";
+                string query = "insert into [dbo].[TimeTable]([CourseId],[ClassId],[TId],[AId],[STime],[ETime],[ClassRoomNo],[SemesterNo],[Year],[Section],[Day],[DId]) values (@CourseId,@ClassId,@TId,@AId,@STime,@ETime,@ClassRoomNo,@SemesterNo,@Year,@Section,@Day,@DId)";
 
                 SqlCommand cmd = new SqlCommand(query, con);
                 cmd.Parameters.AddWithValue("@CourseId", TimeTable[0]);
@@ -228,18 +227,17 @@ namespace UokSemesterSystem
                 cmd.Parameters.AddWithValue("@Section", TimeTable[9]);
                 cmd.Parameters.AddWithValue("@Day", TimeTable[10]);
                 cmd.Parameters.AddWithValue("@DId", TimeTable[11]);
-                cmd.Parameters.AddWithValue("@Slot", TimeTable[12]);
                 cmd.ExecuteNonQuery();
                 con.Close();
             }
-         }
+        }
         private bool CheckForAvailability(string[] TimeTable)
         {
             bool check = false;
             using (SqlConnection con = new SqlConnection(conString))
             {
                 con.Open();
-                string query = "Select * from TimeTable where CourseId='" + TimeTable[1] + "' and TId='"+TimeTable[2]+"' and AId='" + TimeTable[3] + "' and Year='"+TimeTable[8]+"' and STime='"+TimeTable[4]+"' and Day='"+TimeTable[10]+"'";
+                string query = "Select * from TimeTable where CourseId='" + TimeTable[1] + "' and TId='" + TimeTable[2] + "' and AId='" + TimeTable[3] + "' and Year='" + TimeTable[8] + "' and STime='" + TimeTable[4] + "' and Day='" + TimeTable[10] + "'";
                 SqlCommand com = new SqlCommand(query, con);
                 SqlDataReader dr = com.ExecuteReader();
                 dr.Read();
@@ -265,21 +263,18 @@ namespace UokSemesterSystem
         }
         protected void Page_Load(object sender, EventArgs e)
         {
+
             AccountID = Session["AccountId"].ToString();
             Section.Enabled = false;
-            STime.Enabled = false;
-            ETime.Enabled = false;
-           
-          
-            if (!Page.IsPostBack) {
+
+            if (!Page.IsPostBack)
+            {
                 // DepartmentErr.Visible = false;
-                Session["Shift"] = "Morning";
-                STime.Text = "9:00";
-                ETime.Text = "10:50";
+
                 using (SqlConnection con = new SqlConnection(conString))
                 {
                     con.Open();
-                    string query = "Select * from Department where DId='"+Session["AccountId"].ToString()+"'";
+                    string query = "Select * from Department where DId='" + Session["AccountId"].ToString() + "'";
                     SqlCommand com = new SqlCommand(query, con);
                     SqlDataReader dr = com.ExecuteReader();
                     dr.Read();
@@ -287,14 +282,14 @@ namespace UokSemesterSystem
                     {
                         DepartmentName.Text = dr["DepartmentName"].ToString();
                         DepartmentName.Enabled = false;
-                     }
+                    }
 
-                           con.Close();
+                    con.Close();
                     AddTT.Visible = true;
                     UpdateTT.Visible = false;
                 }
                 GetDeparmentID();
-                
+
 
             }
 
@@ -307,77 +302,77 @@ namespace UokSemesterSystem
         {
             if (!IsPostBack)
             {
-           
-                    string currentyear = DateTime.Now.Year.ToString();
-                    ClassErr.Visible = false;
-                    CourseErr.Visible = false;
-                    TeacherErr.Visible = false;
-                    using (SqlConnection con = new SqlConnection(conString))
+
+                string currentyear = DateTime.Now.Year.ToString();
+                ClassErr.Visible = false;
+                CourseErr.Visible = false;
+                TeacherErr.Visible = false;
+                using (SqlConnection con = new SqlConnection(conString))
+                {
+                    con.Open();
+                    string query = "Select * from ClassTable where DId='" + Session["AccountId"].ToString() + "'  and Year='" + currentyear + "' and Shift='" + ShiftList.SelectedItem + "'";
+                    SqlDataAdapter sda = new SqlDataAdapter(query, con);
+                    DataTable dt = new DataTable();
+                    sda.Fill(dt);
+                    ClassList.DataSource = dt;
+                    ClassList.DataBind();
+                    ClassList.DataTextField = "ClassName";
+                    ClassList.DataValueField = "ClassId";
+                    ClassList.DataBind();
+
+                    ClassList.Items.Insert(0, new ListItem("Select", "NA"));
+                    Section.Text = dt.Rows[0][2].ToString();
+
+                    con.Close();
+
+
+                    con.Open();
+                    string query1 = "Select * from Course";
+                    SqlDataAdapter sda1 = new SqlDataAdapter(query1, con);
+                    DataTable dt1 = new DataTable();
+                    sda1.Fill(dt1);
+                    if (!dt1.HasErrors)
                     {
-                        con.Open();
-                        string query = "Select * from ClassTable where DId='" + Session["AccountId"].ToString() + "'  and Year='"+currentyear+"' and Shift='" + ShiftList.SelectedItem + "'";
-                        SqlDataAdapter sda = new SqlDataAdapter(query, con);
-                        DataTable dt = new DataTable();
-                        sda.Fill(dt);
-                        ClassList.DataSource = dt;
-                        ClassList.DataBind();
-                        ClassList.DataTextField = "ClassName";
-                        ClassList.DataValueField = "ClassId";
-                        ClassList.DataBind();
 
-                        ClassList.Items.Insert(0, new ListItem("Select", "NA"));
-                        Section.Text = dt.Rows[0][2].ToString();
-
-                        con.Close();
-                         
-                        
-                        con.Open();
-                        string query1 = "Select * from Course";
-                        SqlDataAdapter sda1 = new SqlDataAdapter(query1, con);
-                        DataTable dt1 = new DataTable();
-                        sda1.Fill(dt1);
-                        if (!dt1.HasErrors) 
-                        {
-                            
-
-                        }
-
-                        CourseList.DataSource = dt1;
-                        CourseList.DataBind();
-                        CourseList.DataTextField = "CourseName";
-                        CourseList.DataValueField = "CourseId";
-                        CourseList.DataBind();
-
-                        CourseList.Items.Insert(0, new ListItem("Select", "NA"));
-                        con.Close();
-                        
-                        con.Open();
-                        string query2 = "Select * from Teacher where Department='"+ Session["AccountId"].ToString() + "'";
-                        SqlDataAdapter sda2 = new SqlDataAdapter(query2, con);
-                        DataTable dt2 = new DataTable();
-                        sda2.Fill(dt2);
-                        TeacherList.DataSource = dt2;
-                        TeacherList.DataBind();
-                        TeacherList.DataTextField = "TName";
-                        TeacherList.DataValueField = "TId";
-                        TeacherList.DataBind();
-
-                        TeacherList.Items.Insert(0, new ListItem("Select", "NA"));
-
-                        //AssisTeacherList.DataSource = dt2;
-                        //AssisTeacherList.DataBind();
-                        //AssisTeacherList.DataTextField = "TName";
-                        //AssisTeacherList.DataValueField = "TId";
-                        //AssisTeacherList.DataBind();
-
-                        //AssisTeacherList.Items.Insert(0, new ListItem("Select", "NA"));
-
-                        con.Close();
 
                     }
 
+                    CourseList.DataSource = dt1;
+                    CourseList.DataBind();
+                    CourseList.DataTextField = "CourseName";
+                    CourseList.DataValueField = "CourseId";
+                    CourseList.DataBind();
 
-            //    }
+                    CourseList.Items.Insert(0, new ListItem("Select", "NA"));
+                    con.Close();
+
+                    con.Open();
+                    string query2 = "Select * from Teacher where Department='" + Session["AccountId"].ToString() + "'";
+                    SqlDataAdapter sda2 = new SqlDataAdapter(query2, con);
+                    DataTable dt2 = new DataTable();
+                    sda2.Fill(dt2);
+                    TeacherList.DataSource = dt2;
+                    TeacherList.DataBind();
+                    TeacherList.DataTextField = "TName";
+                    TeacherList.DataValueField = "TId";
+                    TeacherList.DataBind();
+
+                    TeacherList.Items.Insert(0, new ListItem("Select", "NA"));
+
+                    //AssisTeacherList.DataSource = dt2;
+                    //AssisTeacherList.DataBind();
+                    //AssisTeacherList.DataTextField = "TName";
+                    //AssisTeacherList.DataValueField = "TId";
+                    //AssisTeacherList.DataBind();
+
+                    //AssisTeacherList.Items.Insert(0, new ListItem("Select", "NA"));
+
+                    con.Close();
+
+                }
+
+
+                //    }
             }
 
 
@@ -411,15 +406,9 @@ namespace UokSemesterSystem
                     con.Close();
 
                 }
-                if (Session["Shift"].Equals("Evening")) 
-                {
-                    SlotTime.SelectedIndex=0;
-                    STime.Text = "3:30";
-                    ETime.Text = "5:10";
-                }
             }
 
-            }
+        }
         protected void GetClassID(object sender, EventArgs e)
         {
             if (IsPostBack)
@@ -439,7 +428,7 @@ namespace UokSemesterSystem
 
 
         }
-  protected void GetCoursesID(object sender, EventArgs e)
+        protected void GetCoursesID(object sender, EventArgs e)
         {
             if (IsPostBack)
             {
@@ -461,10 +450,10 @@ namespace UokSemesterSystem
                         dr.Read();
                         if (dr.HasRows)
                         {
-                           if(dr["CreditHours"].Equals("2+1"))
+                            if (dr["CreditHours"].Equals("2+1"))
                             {
                                 con.Close();
-                                
+
                                 AssDiv.Visible = true;
                                 AssErr.Visible = false;
                                 string query2 = "Select * from Teacher where Department='" + Session["AccountId"].ToString() + "'";
@@ -472,7 +461,7 @@ namespace UokSemesterSystem
                                 SqlDataAdapter sda2 = new SqlDataAdapter(query2, con);
                                 DataTable dt2 = new DataTable();
                                 sda2.Fill(dt2);
-                                
+
                                 AssisTeacherList.DataSource = dt2;
                                 AssisTeacherList.DataBind();
                                 AssisTeacherList.DataTextField = "TName";
@@ -497,7 +486,7 @@ namespace UokSemesterSystem
 
 
         }
-protected void GetTeacherID(object sender, EventArgs e)
+        protected void GetTeacherID(object sender, EventArgs e)
         {
             if (IsPostBack)
             {
@@ -516,7 +505,7 @@ protected void GetTeacherID(object sender, EventArgs e)
 
 
         }
-protected void GetAssTeacherID(object sender, EventArgs e)
+        protected void GetAssTeacherID(object sender, EventArgs e)
         {
             if (IsPostBack)
             {
@@ -541,7 +530,7 @@ protected void GetAssTeacherID(object sender, EventArgs e)
             string[] temp;
             string[] course;
             SqlConnection con = new SqlConnection(conString);
-            string query = "select * from TimeTable where DId='" + AccountID + "' and Year='"+ cuurentyear + "'";
+            string query = "select * from TimeTable where DId='" + AccountID + "' and Year='" + cuurentyear + "'";
             con.Open();
             SqlCommand com = new SqlCommand(query, con);
             SqlDataReader dr = com.ExecuteReader();
@@ -593,61 +582,13 @@ protected void GetAssTeacherID(object sender, EventArgs e)
         protected void ShowTTForm_Click(object sender, EventArgs e)
         {
             PnlMain.Visible = true;
-            ShowTTForm.Visible = false;
-        }
+            //ShowTTForm.Visible = false;
+        } 
 
         protected void Back_Click(object sender, EventArgs e)
         {
             PnlMain.Visible = false;
-            ShowTTForm.Visible = true;
-        }
-
-        protected void SlotTime_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (IsPostBack)
-            {
-                string Time = SlotTime.SelectedIndex.ToString();
-                int slot = Convert.ToInt32(Time) + 1;
-                Session["Slot"] = slot.ToString();
-                
-                if (Session["Shift"].ToString().Equals("Morning")) 
-                {
-                    if (Time.Equals("0"))
-                    {
-                        STime.Text = "9:00";
-                        ETime.Text = "10:50";
-                    }else if (Time.Equals("1"))
-                    {
-                        STime.Text = "11:00";
-                        ETime.Text = "12:50";
-                    }
-                    else if(Time.Equals("2"))
-                    {
-                        STime.Text = "1:50";
-                        ETime.Text = "3:50";
-                    }
-
-                }else if (Session["Shift"].ToString().Equals("Evening"))
-                {
-                    if (Time.Equals("0"))
-                    {
-                        STime.Text = "3:30";
-                        ETime.Text = "5:10";
-                    }
-                    else if (Time.Equals("1"))
-                    {
-                        STime.Text = "5:10";
-                        ETime.Text = "6:50";
-                    }
-                    else if (Time.Equals("2"))
-                    {
-                        STime.Text = "6:50";
-                        ETime.Text = "8:50";
-                    }
-
-                }
-
-            }
+           // ShowTTForm.Visible = true;
         }
 
         private string[] GetClassInfo(string Class_ID)
@@ -732,6 +673,7 @@ protected void GetAssTeacherID(object sender, EventArgs e)
         {
             SortList();
             TableRow tr; TableCell tc;
+            int countmorn = 1, counteven = 1;
             string[] temp = new string[12];
             int j;
             for (int i = 0; i < Courses.Count; i++)
@@ -745,19 +687,23 @@ protected void GetAssTeacherID(object sender, EventArgs e)
                     {
                         tc = new TableCell();
                         tc.Text = temp[j];
-                        tc.CssClass = "tcell";
-                        if (j == 6) tc.Width = 300;
+                        if (j == 1) tc.CssClass = "backcellleft";
+                        else if (j == 8) tc.CssClass = "backcellright";
                         tr.Cells.Add(tc);
                     }
                     tc = new TableCell();
                     LinkButton link = new LinkButton();
                     link.ID = temp[11].ToString();
                     link.Text = "Edit";
-                    link.ForeColor = Color.Blue;
+                    link.CssClass = "tablelink";
                     link.Click += new EventHandler(EditClick);
                     tc.Controls.Add(link);
                     tr.Cells.Add(tc);
+                    if (countmorn % 2 == 0)
+                        tr.BackColor = System.Drawing.Color.FromArgb(240, 240, 240);
+                    tc.BackColor = System.Drawing.Color.White;
                     TeacherCoursesMorning.Rows.Add(tr);
+                    countmorn++;
                 }
                 else
                 {
@@ -765,21 +711,24 @@ protected void GetAssTeacherID(object sender, EventArgs e)
                     {
                         tc = new TableCell();
                         tc.Text = temp[j];
-                        tc.CssClass = "tcell";
-                        if (j == 6) tc.Width = 300;
+                        if (j == 1) tc.CssClass = "backcellleft";
+                        else if (j == 8) tc.CssClass = "backcellright";
                         tr.Cells.Add(tc);
                     }
                     tc = new TableCell();
                     LinkButton link = new LinkButton();
                     link.ID = temp[11].ToString();
+                    link.CssClass = "tablelink";
                     link.Text = "Edit";
                     link.Click += new EventHandler(EditClick);
-                    
-                    tc.Controls.Add(link);
 
-                    
+                    tc.Controls.Add(link);
+                    if (counteven % 2 == 0)
+                        tr.BackColor = System.Drawing.Color.FromArgb(240, 240, 240);
+                    tc.BackColor = System.Drawing.Color.White;
                     tr.Cells.Add(tc);
                     TeacherCoursesEvening.Rows.Add(tr);
+                    counteven++;
                 }
             }
 
@@ -792,7 +741,7 @@ protected void GetAssTeacherID(object sender, EventArgs e)
         private void EditClick(object sender, EventArgs e)
         {
             PnlMain.Visible = true;
-            ShowTTForm.Visible = false;
+           // ShowTTForm.Visible = false;
             string temp = ((LinkButton)sender).ID.ToString();
 
             Session["TTId"] = temp;
@@ -811,28 +760,25 @@ protected void GetAssTeacherID(object sender, EventArgs e)
                     classInfo = GetClassInfo(dr["ClassId"].ToString());
                     //ShiftList.SelectedValue = classInfo[1];
                     ShiftList.SelectedIndex = ShiftList.Items.IndexOf(ShiftList.Items.FindByText(classInfo[1]));
-                    Session["Shift"] = classInfo[1];
-                    int slot = Convert.ToInt32(dr["Slot"].ToString()) - 1;
-                    SlotTime.SelectedIndex = slot ;
-                    
+
                     Section.Text = classInfo[2];
                     courseInfo = GetCourseInfo(dr["CourseId"].ToString());
                     CourseList.SelectedIndex = CourseList.Items.IndexOf(CourseList.Items.FindByText(courseInfo[1]));
                     Session["courseId"] = CourseList.SelectedValue;
-                    
+
                     //CourseList.SelectedItem.Text = courseInfo[1];
                     //TeacherList.SelectedItem.Text = GetTeacherInfo(dr["TId"].ToString());
                     string Tname = GetTeacherInfo(dr["TId"].ToString());
                     TeacherList.SelectedIndex = TeacherList.Items.IndexOf(TeacherList.Items.FindByText(Tname));
-                    Session["TeacId"] = TeacherList.SelectedValue; 
-                   
+                    Session["TeacId"] = TeacherList.SelectedValue;
+
                     STime.Text = dr["STime"].ToString();
                     ETime.Text = dr["ETime"].ToString();
                     RoomNo.Text = dr["ClassRoomNo"].ToString();
                     SemesterList.SelectedValue = dr["SemesterNo"].ToString();
                     DaysList.SelectedValue = dr["Day"].ToString();
                     Tname = GetTeacherInfo(dr["AId"].ToString());
-                   
+
                     if (!dr["AId"].Equals("0"))
                     {
                         AssDiv.Visible = true;
